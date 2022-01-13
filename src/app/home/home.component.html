@@ -1,0 +1,204 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Détails filiére</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="filiereForm">
+      <div class="form-group">
+        <label for="dateOfBirth">Nom filiére</label>
+        <input class="form-control" formControlName="nomFiliere" type="text" placeholder="nom de filiere" />
+        <div
+          *ngIf="
+            filiereForm.controls.nomFiliere.touched &&
+            filiereForm.controls.nomFiliere.invalid
+          "
+        >
+          <small
+            *ngIf="filiereForm.controls.nomFiliere.errors"
+            class="text-danger"
+            >nom de filiere est obligatoire<br
+          /></small>
+        </div>
+        <label for="dateOfBirth">Population</label>
+        <input class="form-control" formControlName="population" type="text" placeholder="poppulation" />
+        <div
+          *ngIf="
+            filiereForm.controls.population.touched &&
+            filiereForm.controls.population.invalid
+          "
+        >
+          <small
+            *ngIf="filiereForm.controls.population.errors"
+            class="text-danger"
+            >population est obligatoire<br
+          /></small>
+        </div>
+        <label for="dateOfBirth">Groupes</label>
+        <select class="form-control" formControlName="group">
+          <option [value]="null" disabled>choisir le groupe</option>
+          <option *ngFor="let item of groupes" [ngValue]="item.value">
+            {{ item.title }}
+          </option>
+        </select>
+
+        <div
+          *ngIf="
+            filiereForm.controls.group.touched &&
+            filiereForm.controls.group.invalid
+          "
+        >
+          <small *ngIf="filiereForm.controls.group.errors" class="text-danger"
+            >nom de filiere est obligatoire<br
+          /></small>
+        </div>
+        <label for="dateOfBirth">Unité d'enseignement</label>
+        <select formControlName="UnitEnseignement" class="form-control" >
+          <option [value]="null" disabled selected>choisir l'unité d'enseignement</option>
+          <option *ngFor="let item of gEnseignements" [ngValue]="item.value">
+            {{ item.title }}
+          </option>
+        </select>
+        <div
+          *ngIf="
+            filiereForm.controls.UnitEnseignement.touched &&
+            filiereForm.controls.UnitEnseignement.invalid
+          "
+        >
+          <small
+            *ngIf="filiereForm.controls.UnitEnseignement.errors"
+            class="text-danger"
+            >unite d'enseignement est obligatoire<br
+          /></small>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      [disabled]="filiereForm.invalid"
+      type="submit "
+      class="btn btn-success pull-right"
+      (click)="enregister()"
+    >
+      Registrer
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #deleteconfirm let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Confirmation</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Vous voulez vraiment supprimer
+    <strong> {{ filiereForm.controls.nomFiliere.value }}</strong
+    >?
+  </div>
+  <div class="modal-footer">
+    <button
+      [disabled]="filiereForm.invalid"
+      type="submit "
+      class="btn btn-outline-danger pull-right"
+      (click)="modal.dismiss('Cross click')"
+    >
+      Non
+    </button>
+    <button
+      [disabled]="filiereForm.invalid"
+      type="submit "
+      class="btn btn-danger pull-right"
+      (click)="deleteFiliere()"
+    >
+      Oui
+    </button>
+  </div>
+</ng-template>
+
+<div
+  class="page-content page-container"
+  id="page-content"
+  style="background-color: lightgray"
+>
+  <div class="padding">
+    <div class="row container d-flex justify-content-center">
+      <div class="col-lg-10 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">Tableau des Filiéres</h2>
+            <div class="table-responsive">
+              <button
+                type="button"
+                class="btn btn-success float-right mr-4"
+                (click)="openForm(content)"
+              >
+                <i class="bi bi-plus-lg"></i>
+                Ajouter
+              </button>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Nom filiére</th>
+                    <th>Population</th>
+                    <th>Groupe</th>
+                    <th>unité d'enseignement</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let filiere of filiers">
+                    <td>{{ filiere.id }}</td>
+                    <td>{{ filiere.nomFiliere }}</td>
+                    <td>{{ filiere.population }}</td>
+                    <td>{{ filiere.group }}</td>
+                    <td>{{ filiere.UnitEnseignement }}</td>
+
+                    <td>
+                      <div
+                        class="btn-group"
+                        role="group"
+                        aria-label="Button group with nested dropdown"
+                      >
+                        <button
+                          type="button"
+                          class="btn btn-warning"
+                          (click)="updateForm(content, filiere)"
+                        >
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-danger"
+                          (click)="updateForm(deleteconfirm, filiere)"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
